@@ -2,7 +2,7 @@ package com.MDL30MBDEPENL.model;
 
 import java.time.LocalDateTime;
 
-public record Content(
+public record Users(
         Integer id,
         String title,
         String desc,

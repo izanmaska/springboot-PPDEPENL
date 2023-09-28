@@ -1,10 +1,10 @@
-CREATE TABLE users (
+CREATE TABLE if not exists users (
     id BIGSERIAL PRIMARY KEY,
-    username TEXT NOT NULL,
+    username varchar(255) NOT NULL,
     unique (username)
 );
 
-CREATE TABLE communities (
+CREATE TABLE if not exists communities (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     owner_id BIGINT,

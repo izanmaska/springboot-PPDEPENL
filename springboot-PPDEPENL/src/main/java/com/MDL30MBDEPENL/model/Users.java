@@ -1,16 +1,18 @@
 package com.MDL30MBDEPENL.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record Users(
-        Integer id,
-        String title,
-        String desc,
+        Long id,
+        String userName,
+        String email,
         Status status,
-        Type contentType,
+        Type userType,
         LocalDateTime dateCreated,
         LocalDateTime dateUpdated,
         String url
 ) {
+
 
 }

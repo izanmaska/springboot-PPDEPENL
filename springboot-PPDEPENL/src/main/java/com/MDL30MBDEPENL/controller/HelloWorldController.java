@@ -14,7 +14,7 @@
 //    private final AtomicLong counter = new AtomicLong();
 //
 //    @GetMapping("/greeting")
-//    public HelloWorld greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-//        return new HelloWorld(counter.incrementAndGet(), String.format(template, name));
+//    public HelloWorld greeting(@RequestParam(value = "userName", defaultValue = "World") String userName) {
+//        return new HelloWorld(counter.incrementAndGet(), String.format(template, userName));
 //    }
 //}

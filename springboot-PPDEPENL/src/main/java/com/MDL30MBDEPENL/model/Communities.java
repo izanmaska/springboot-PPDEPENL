@@ -2,7 +2,6 @@ package com.MDL30MBDEPENL.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "communities")
@@ -14,8 +13,8 @@ public class Communities {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "descr")
+    private String descr;
 
     @Column(name = "owner_id")
     private Long ownerId;
@@ -45,7 +44,7 @@ public class Communities {
     public Communities(Long id, String name, String desc, Long ownerId, String ownerUsername, Status status, LocalDateTime dateCreated, LocalDateTime dateUpdated, String url/*, List<Users> users*/) {
         this.id = id;
         this.name = name;
-        this.desc = desc;
+        this.descr = desc;
         this.ownerId = ownerId;
         this.ownerUsername = ownerUsername;
         this.status = status;
@@ -63,8 +62,8 @@ public class Communities {
         return name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescr() {
+        return descr;
     }
 
     public Long getOwnerId() {
@@ -103,8 +102,8 @@ public class Communities {
         this.name = name;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescr(String descr) {
+        this.descr = descr;
     }
 
     public void setOwnerId(Long ownerId) {

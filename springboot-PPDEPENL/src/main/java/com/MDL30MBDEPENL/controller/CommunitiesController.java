@@ -20,28 +20,28 @@ public class CommunitiesController {
     @Autowired
     private CommunitiesService communitiesService;
 
-    @PostMapping
-    private ResponseEntity<Communities> save (@RequestBody Communities communities){
-        Communities temp = communitiesService.createCommunity(communities);
-        try {
-            return ResponseEntity.created(new URI("api/users/"+temp.getId())).body(temp);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-    @GetMapping
-    private ResponseEntity<List<Communities>> listAllCommunities (){
-        return ResponseEntity.ok(communitiesService.communitiesFindAll());
-    }
-
-    @DeleteMapping
-    private ResponseEntity<Void> deleteCommunity (@RequestBody Communities communities){
-        communitiesService.deleteCommunity(communities);
-        return ResponseEntity.ok().build();
-    }
-    @GetMapping (value = "{id}")
-    private ResponseEntity<Optional<Communities>> findUserById (@PathVariable ("id") Long id){
-        return ResponseEntity.ok(communitiesService.communityFindById(id));
-    }
+//    @PostMapping
+//    private ResponseEntity<Communities> saveCommunity (@RequestBody Communities communities){
+//        Communities temp = communitiesService.createCommunity(communities);
+//        try {
+//            return ResponseEntity.created(new URI("api/users/"+temp.getId())).body(temp);
+//        }catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
+//    @GetMapping
+//    private ResponseEntity<List<Communities>> listAllCommunities (){
+//        return ResponseEntity.ok(communitiesService.communitiesFindAll());
+//    }
+//
+//    @DeleteMapping
+//    private ResponseEntity<Void> deleteCommunity (@RequestBody Communities communities){
+//        communitiesService.deleteCommunity(communities);
+//        return ResponseEntity.ok().build();
+//    }
+//    @GetMapping (value = "{id}")
+//    private ResponseEntity<Optional<Communities>> findUserById (@PathVariable ("id") Long id){
+//        return ResponseEntity.ok(communitiesService.communityFindById(id));
+//    }
 
 }

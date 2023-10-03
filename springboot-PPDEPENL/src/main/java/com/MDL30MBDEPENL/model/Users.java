@@ -31,6 +31,8 @@ public class Users {
 
     @Column(name = "date_updated")
     private LocalDateTime dateUpdated;
+    @Column(name = "url")
+    private String url;
 
     public Users() {
     }
@@ -46,8 +48,7 @@ public class Users {
         this.url = url;
     }
 
-    @Column(name = "url")
-    private String url;
+
     public Long getId() {
         return id;
     }

@@ -1,4 +1,4 @@
-package com.MDL30MBDEPENL.REST;
+package com.MDL30MBDEPENL.controller;
 
 import com.MDL30MBDEPENL.model.Users;
 import com.MDL30MBDEPENL.service.UsersService;
@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping
-public class UsersREST {
+public class UsersController {
     @Autowired
     private UsersService usersService;
 
     @PostMapping
     private ResponseEntity<Users> save (@RequestBody Users users){
-        Users temp = usersService.create(users);
+        Users temp = usersService.createUser(users);
         try {
             return ResponseEntity.created(new URI("api/users/"+temp.getId())).body(temp);
         }catch (Exception e){
@@ -33,12 +33,12 @@ public class UsersREST {
 
     @DeleteMapping
     private ResponseEntity<Void> deleteUsers (@RequestBody Users users){
-        usersService.delete(users);
+        usersService.deleteUser(users);
         return ResponseEntity.ok().build();
     }
     @GetMapping (value = "{id}")
     private ResponseEntity<Optional<Users>> findUserById (@PathVariable ("id") Long id){
-        return ResponseEntity.ok(usersService.usersFindById(id));
+        return ResponseEntity.ok(usersService.userFindById(id));
     }
 
 

@@ -13,17 +13,17 @@ public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
 
-    public Users create (Users users){
+    public Users createUser(Users users){
         return usersRepository.save(users);
     }
     public List<Users> usersFindAll(){
         return usersRepository.findAll();
     }
-    public void delete (Users users){
+    public void deleteUser(Users users){
         usersRepository.delete(users);
     }
 
-    public Optional<Users> usersFindById(Long id){
+    public Optional<Users> userFindById(Long id){
         return usersRepository.findById(id);
     }
 

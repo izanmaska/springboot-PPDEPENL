@@ -36,13 +36,13 @@ public class Communities {
     @Column(name = "url")
     private String url;
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
-    private List<Users> users;
+//    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+//    private List<Users> users;
 
     public Communities() {
     }
 
-    public Communities(Long id, String name, String desc, Long ownerId, String ownerUsername, Status status, LocalDateTime dateCreated, LocalDateTime dateUpdated, String url, List<Users> users) {
+    public Communities(Long id, String name, String desc, Long ownerId, String ownerUsername, Status status, LocalDateTime dateCreated, LocalDateTime dateUpdated, String url/*, List<Users> users*/) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -52,7 +52,7 @@ public class Communities {
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.url = url;
-        this.users = users;
+//        this.users = users;
     }
 
     public Long getId() {
@@ -91,9 +91,9 @@ public class Communities {
         return url;
     }
 
-    public List<Users> getUsers() {
-        return users;
-    }
+//    public List<Users> getUsers() {
+//        return users;
+//    }
 
     public void setId(Long id) {
         this.id = id;
@@ -131,8 +131,8 @@ public class Communities {
         this.url = url;
     }
 
-    public void setUsers(List<Users> users) {
-        this.users = users;
-    }
+//    public void setUsers(List<Users> users) {
+//        this.users = users;
+//    }
 
 }

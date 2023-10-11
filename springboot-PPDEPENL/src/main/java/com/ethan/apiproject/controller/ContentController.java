@@ -1,8 +1,8 @@
 //package com.apiproject.controller;
 //
-//import com.apiproject.model.Communities;
-//import com.apiproject.model.Transactions;
-//import com.apiproject.model.Users;
+//import model.com.ethan.apiproject.Communities;
+//import model.com.ethan.apiproject.Transactions;
+//import model.com.ethan.apiproject.Users;
 //import com.apiproject.repository.usersCommunitiesAPI;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.HttpStatus;

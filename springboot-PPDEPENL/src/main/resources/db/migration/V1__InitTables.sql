@@ -32,3 +32,11 @@ CREATE TABLE if not exists transactions (
     date timestamp NOT NULL,
     url varchar(255)
 );
+
+CREATE TABLE IF NOT EXISTS community_users (
+    community_id BIGINT,
+    user_id BIGINT,
+    PRIMARY KEY (community_id, user_id),
+    FOREIGN KEY (community_id) REFERENCES communities(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

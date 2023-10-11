@@ -1,4 +1,4 @@
-package com.apiproject.model;
+package com.ethan.apiproject.model;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +30,7 @@ public class Transactions {
 
     @Column(name = "url")
     private String url;
+
 
     public Transactions() {
     }

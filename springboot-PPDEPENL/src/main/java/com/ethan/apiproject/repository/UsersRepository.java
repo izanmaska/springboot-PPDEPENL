@@ -1,5 +1,6 @@
-package com.apiproject.repository;
-import com.apiproject.model.Users;
+package com.ethan.apiproject.repository;
+import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.Transactions;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

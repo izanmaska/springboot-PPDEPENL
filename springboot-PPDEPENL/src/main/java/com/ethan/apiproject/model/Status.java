@@ -1,4 +1,4 @@
-package com.apiproject.model;
+package com.ethan.apiproject.model;
 
 public enum Status {
     ACTIVE,

@@ -1,4 +1,4 @@
-package com.apiproject;
+package com.ethan.apiproject;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

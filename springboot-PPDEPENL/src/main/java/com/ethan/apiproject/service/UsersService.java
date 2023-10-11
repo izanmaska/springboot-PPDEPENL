@@ -1,7 +1,9 @@
-package com.apiproject.service;
+package com.ethan.apiproject.service;
 
-import com.apiproject.model.Users;
-import com.apiproject.repository.UsersRepository;
+import com.ethan.apiproject.model.Transactions;
+import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.repository.TransactionsRepository;
+import com.ethan.apiproject.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.util.Optional;
 public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
+
+
 
     public Users createUser(Users users){
         return usersRepository.save(users);
@@ -26,5 +30,6 @@ public class UsersService {
     public Optional<Users> userFindById(Long id){
         return usersRepository.findById(id);
     }
+    public boolean userExistsById(Long id){return usersRepository.existsById(id);}
 
 }

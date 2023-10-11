@@ -1,8 +1,9 @@
-package com.apiproject.model;
+package com.ethan.apiproject.model;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -33,6 +34,9 @@ public class Users {
     private LocalDateTime dateUpdated;
     @Column(name = "url")
     private String url;
+    @ManyToMany(mappedBy = "users")
+    private List<Communities> communities;
+
 
     public Users() {
     }

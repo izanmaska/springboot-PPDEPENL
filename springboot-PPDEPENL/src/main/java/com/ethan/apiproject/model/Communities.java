@@ -1,7 +1,9 @@
-package com.apiproject.model;
+package com.ethan.apiproject.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "communities")
@@ -12,9 +14,6 @@ public class Communities {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "descr")
-    private String descr;
 
     @Column(name = "owner_id")
     private Long ownerId;
@@ -34,24 +33,30 @@ public class Communities {
 
     @Column(name = "url")
     private String url;
+    @ManyToMany
+    @JoinTable(
+            name = "community_users",
+            joinColumns = @JoinColumn(name = "community_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Users> users;
 
-//    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
-//    private List<Users> users;
+    public List<Users> getUsers() {
+        return users;
+    }
 
     public Communities() {
     }
 
-    public Communities(Long id, String name, String desc, Long ownerId, String ownerUsername, Status status, LocalDateTime dateCreated, LocalDateTime dateUpdated, String url/*, List<Users> users*/) {
+    public Communities(Long id, String name, Long ownerId, String ownerUsername, Status status, LocalDateTime dateCreated, LocalDateTime dateUpdated, String url) {
         this.id = id;
         this.name = name;
-        this.descr = desc;
         this.ownerId = ownerId;
         this.ownerUsername = ownerUsername;
         this.status = status;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.url = url;
-//        this.users = users;
     }
 
     public Long getId() {
@@ -62,9 +67,6 @@ public class Communities {
         return name;
     }
 
-    public String getDescr() {
-        return descr;
-    }
 
     public Long getOwnerId() {
         return ownerId;
@@ -90,9 +92,6 @@ public class Communities {
         return url;
     }
 
-//    public List<Users> getUsers() {
-//        return users;
-//    }
 
     public void setId(Long id) {
         this.id = id;
@@ -102,9 +101,6 @@ public class Communities {
         this.name = name;
     }
 
-    public void setDescr(String descr) {
-        this.descr = descr;
-    }
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
@@ -130,8 +126,6 @@ public class Communities {
         this.url = url;
     }
 
-//    public void setUsers(List<Users> users) {
-//        this.users = users;
-//    }
+
 
 }

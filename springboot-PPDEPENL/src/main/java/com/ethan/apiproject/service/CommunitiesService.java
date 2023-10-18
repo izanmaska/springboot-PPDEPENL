@@ -30,6 +30,7 @@ public class CommunitiesService {
         communitiesRepository.delete(communities);
     }
 
+
     public Optional<Communities> communityFindById(Long id){
 
         return communitiesRepository.findById(id);
@@ -47,6 +48,9 @@ public class CommunitiesService {
         }
 
         return null;
+    }
+    public Communities updateCommunity(Communities community) {
+        return communitiesRepository.save(community);
     }
 
     public Communities removeUserFromCommunity(Long communityId, Long userId) {

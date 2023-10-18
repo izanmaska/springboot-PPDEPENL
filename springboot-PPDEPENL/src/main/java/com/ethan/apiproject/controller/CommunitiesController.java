@@ -37,13 +37,40 @@ public class CommunitiesController {
         return ResponseEntity.ok().build();
     }
     @GetMapping ("/{id}")
-    private ResponseEntity<Optional<Communities>> findUserById (@PathVariable ("id") Long id){
+    private ResponseEntity<Optional<Communities>> findCommunityById(@PathVariable ("id") Long id){
         return ResponseEntity.ok(communitiesService.communityFindById(id));
     }
     @GetMapping ("/owner/{id}")
     public ResponseEntity<List<Communities>> findCommunitiesByOwnerId(@PathVariable Long ownerId) {
         List<Communities> communities = communitiesService.findCommunitiesByOwnerId(ownerId);
         return ResponseEntity.ok(communities);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Communities> createCommunity(@RequestBody Communities communities) {
+        Communities createdCommunity = communitiesService.createCommunity(communities);
+        if (createdCommunity != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdCommunity);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Communities> updateCommunity(
+            @PathVariable Long id,
+            @RequestBody Communities updatedCommunity
+    ) {
+        Communities community = communitiesService.communityFindById(id).orElse(null);
+        if (community == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        community.setName(updatedCommunity.getName());
+        community.setOwnerUsername(updatedCommunity.getOwnerUsername());
+
+        Communities updated = communitiesService.updateCommunity(community);
+
+        return ResponseEntity.ok(updated);
     }
     @PostMapping("/{communityId}/addUser/{userId}")
     public ResponseEntity<Communities> addUserToCommunity(@PathVariable Long communityId, @PathVariable Long userId) {

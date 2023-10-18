@@ -17,13 +17,13 @@ public class Transactions {
     private Long user1Id;
 
     @Column(name = "user1_type")
-    private String user1Type;
+    private Type user1Type;
 
     @Column(name = "user2_id")
     private Long user2Id;
 
     @Column(name = "user2_type")
-    private String user2Type;
+    private Type user2Type;
 
     @Column(name = "date")
     private LocalDateTime date;
@@ -35,7 +35,7 @@ public class Transactions {
     public Transactions() {
     }
 
-    public Transactions(Long id, Long user1Id, String user1Type, Long user2Id, String user2Type, LocalDateTime date, String url) {
+    public Transactions(Long id, Long user1Id, Type user1Type, Long user2Id, Type user2Type, LocalDateTime date, String url) {
         this.id = id;
         this.user1Id = user1Id;
         this.user1Type = user1Type;
@@ -62,11 +62,11 @@ public class Transactions {
         this.user1Id = user1Id;
     }
 
-    public String getUser1Type() {
+    public Type getUser1Type() {
         return user1Type;
     }
 
-    public void setUser1Type(String user1Type) {
+    public void setUser1Type(Type user1Type) {
         this.user1Type = user1Type;
     }
 
@@ -78,11 +78,11 @@ public class Transactions {
         this.user2Id = user2Id;
     }
 
-    public String getUser2Type() {
+    public Type getUser2Type() {
         return user2Type;
     }
 
-    public void setUser2Type(String user2Type) {
+    public void setUser2Type(Type user2Type) {
         this.user2Type = user2Type;
     }
 

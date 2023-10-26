@@ -1,5 +1,4 @@
-package com.ethan.apiproject.IntegrationTests.ServiceIntegrationTest;
-
+package com.ethan.apiproject.IntegrationTests.APIIntegrationTests;
 import com.ethan.apiproject.model.Type;
 import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.service.UsersService;
@@ -12,12 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UsersSIT {
-
+public class UsersAPITests {
     @LocalServerPort
     private int port;
 
@@ -52,7 +49,6 @@ public class UsersSIT {
         assertNotNull(createdUser.getId());
         assertEquals("TestUser", createdUser.getUserName());
         assertEquals(Type.B2C, createdUser.getUserType());
-
     }
 
     @Test
@@ -96,6 +92,68 @@ public class UsersSIT {
         assertEquals(userId, foundUser.getId());
         assertEquals("TestUser", foundUser.getUserName());
         assertEquals(Type.B2C, foundUser.getUserType());
-
     }
+    @Test
+    public void testUpdateUser() {
+        com.ethan.apiproject.model.Users newUser = new com.ethan.apiproject.model.Users();
+        newUser.setUserName("TestUser");
+        newUser.setEmail("testuser@example.com");
+
+        ResponseEntity<com.ethan.apiproject.model.Users> createResponse = restTemplate.postForEntity(
+                baseUrl + "/api/users",
+                newUser,
+                com.ethan.apiproject.model.Users.class
+        );
+
+        com.ethan.apiproject.model.Users createdUser = createResponse.getBody();
+        assert createdUser != null;
+        Long userId = createdUser.getId();
+
+        newUser.setUserName("UpdatedUserName");
+        newUser.setEmail("updateduser@example.com");
+
+        restTemplate.put(baseUrl + "/api/users/" + userId, newUser);
+
+        ResponseEntity<com.ethan.apiproject.model.Users> updatedResponse = restTemplate.getForEntity(
+                baseUrl + "/api/users/" + userId,
+                com.ethan.apiproject.model.Users.class
+        );
+
+        assertEquals(HttpStatus.OK, updatedResponse.getStatusCode());
+        com.ethan.apiproject.model.Users updatedUser = updatedResponse.getBody();
+
+        assertNotNull(updatedUser);
+        assertEquals(userId, updatedUser.getId());
+        assertEquals("UpdatedUserName", updatedUser.getUserName());
+        assertEquals("updateduser@example.com", updatedUser.getEmail());
+    }
+    @Test
+    public void testDeleteUser() {
+        com.ethan.apiproject.model.Users newUser = new com.ethan.apiproject.model.Users();
+        newUser.setUserName("TestUser");
+        newUser.setEmail("testuser@example.com");
+
+        ResponseEntity<com.ethan.apiproject.model.Users> createResponse = restTemplate.postForEntity(
+                baseUrl + "/api/users",
+                newUser,
+                com.ethan.apiproject.model.Users.class
+        );
+
+        com.ethan.apiproject.model.Users createdUser = createResponse.getBody();
+        assert createdUser != null;
+        Long userId = createdUser.getId();
+
+        restTemplate.delete(baseUrl + "/api/users/" + userId);
+
+        ResponseEntity<com.ethan.apiproject.model.Users> getResponse = restTemplate.getForEntity(
+                baseUrl + "/api/users/" + userId,
+                com.ethan.apiproject.model.Users.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
+        assertNull(getResponse.getBody());
+    }
+
+
+
 }

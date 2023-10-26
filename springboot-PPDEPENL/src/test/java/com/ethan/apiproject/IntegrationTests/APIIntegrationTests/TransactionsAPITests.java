@@ -1,10 +1,9 @@
-package com.ethan.apiproject.IntegrationTests.ServiceIntegrationTest;
-
+package com.ethan.apiproject.IntegrationTests.APIIntegrationTests;
 import com.ethan.apiproject.model.Transactions;
-import com.ethan.apiproject.service.TransactionsService;
 import com.ethan.apiproject.model.Type;
 import com.ethan.apiproject.repository.TransactionsRepository;
 import com.ethan.apiproject.repository.UsersRepository;
+import com.ethan.apiproject.service.TransactionsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TransactionsSIT {
 
+public class TransactionsAPITests {
     @LocalServerPort
     private int port;
 
@@ -65,7 +60,6 @@ public class TransactionsSIT {
         assertNotNull(createdTransaction.getId());
         assertEquals(newTransaction.getUser1Id(), createdTransaction.getUser1Id());
         assertEquals(newTransaction.getUser2Id(), createdTransaction.getUser2Id());
-
     }
 
     @Test
@@ -111,6 +105,59 @@ public class TransactionsSIT {
         assertEquals(transactionId, foundTransaction.getId());
         assertEquals(newTransaction.getUser1Id(), foundTransaction.getUser1Id());
         assertEquals(newTransaction.getUser2Id(), foundTransaction.getUser2Id());
-
     }
+    @Test
+    public void testDeleteTransaction() {
+        com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
+        newTransaction.setUser1Id(1L);
+        newTransaction.setUser2Id(2L);
+        newTransaction.setUrl("http://example.com");
+
+        ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
+                baseUrl + "/api/transactions",
+                newTransaction,
+                com.ethan.apiproject.model.Transactions.class
+        );
+
+        com.ethan.apiproject.model.Transactions createdTransaction = createResponse.getBody();
+        assert createdTransaction != null;
+        Long transactionId = createdTransaction.getId();
+
+        restTemplate.delete(baseUrl + "/api/transactions/" + transactionId);
+
+        ResponseEntity<com.ethan.apiproject.model.Transactions> getResponse = restTemplate.getForEntity(
+                baseUrl + "/api/transactions/" + transactionId,
+                com.ethan.apiproject.model.Transactions.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
+        assertNull(getResponse.getBody());
+    }
+    @Test
+    public void testTransactionHistory() {
+        com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
+        newTransaction.setUser1Id(1L);
+        newTransaction.setUser2Id(2L);
+        newTransaction.setUrl("http://example.com");
+
+        ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
+                baseUrl + "/api/transactions",
+                newTransaction,
+                com.ethan.apiproject.model.Transactions.class
+        );
+
+        com.ethan.apiproject.model.Transactions createdTransaction = createResponse.getBody();
+        assert createdTransaction != null;
+        Long transactionId = createdTransaction.getId();
+
+        ResponseEntity<com.ethan.apiproject.model.Transactions[]> historyResponse = restTemplate.getForEntity(
+                baseUrl + "/api/users/1/transactions",
+                com.ethan.apiproject.model.Transactions[].class
+        );
+        assertEquals(HttpStatus.OK, historyResponse.getStatusCode());
+        com.ethan.apiproject.model.Transactions[] transactionHistory = historyResponse.getBody();
+        assertNotNull(transactionHistory);
+    }
+
+
 }

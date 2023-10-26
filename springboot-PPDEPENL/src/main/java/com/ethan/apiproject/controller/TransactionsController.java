@@ -5,6 +5,9 @@ import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.service.TransactionsService;
 import com.ethan.apiproject.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +29,9 @@ public class TransactionsController {
 
 
     @GetMapping("/transactions")
-    private ResponseEntity<List<Transactions>> listAllTransactions (){
-        return ResponseEntity.ok(transactionsService.transactionsFindAll());
+    private ResponseEntity<Page<Transactions>> listAllTransactions(Pageable pageable) {
+        Page<Transactions> transactionsPage = transactionsService.transactionsFindAll(pageable);
+        return ResponseEntity.ok(transactionsPage);
     }
     @GetMapping (value = "/{id}")
     private ResponseEntity<Optional<Transactions>> findTransactionById (@PathVariable ("id") Long id){
@@ -59,8 +63,11 @@ public class TransactionsController {
 
 
     @GetMapping("/{userId}/transactions")
-    public List<Transactions> listTransactionsByUser(@PathVariable Long userId) {
-        return transactionsService.listTransactionsByUser(userId);
+    public ResponseEntity<Page<Transactions>> listTransactionsByUser(@PathVariable Long userId,
+                                                                     @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                     @RequestParam(name = "size", defaultValue = "10") int size) {
+        Page<Transactions> transactionsPage = transactionsService.listTransactionsByUser(userId, PageRequest.of(page, size));
+        return ResponseEntity.ok(transactionsPage);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

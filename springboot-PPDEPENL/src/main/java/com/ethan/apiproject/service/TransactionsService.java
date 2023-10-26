@@ -6,6 +6,9 @@ import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.repository.TransactionsRepository;
 import com.ethan.apiproject.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +39,11 @@ public class TransactionsService {
             throw new IllegalArgumentException("At least one user must be of type 'B2C'");
         }
 
-        // Create the transaction
         return transactionsRepository.save(transactions);
     }
-    public List<Transactions> transactionsFindAll(){
-        return transactionsRepository.findAll();
-    }
-    public void deleteTransaction(Transactions transactions){
+    public Page<Transactions> transactionsFindAll(Pageable pageable) {
+        return transactionsRepository.findAll(pageable);
+    }    public void deleteTransaction(Transactions transactions){
         transactionsRepository.delete(transactions);
     }
 
@@ -57,8 +59,21 @@ public class TransactionsService {
         return transactionsRepository.existsById(id);
     }
 
-    public List<Transactions> listTransactionsByUser(Long userId) {
-        return transactionsRepository.findAllByUser1IdOrUser2Id(userId, userId);
+    public Page<Transactions> listTransactionsByUser(Long userId, Pageable pageable) {
+        List<Transactions> allTransactions = transactionsRepository.findAllByUser1IdOrUser2Id(userId, userId);
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Transactions> paginatedTransactions;
+
+        if (startItem < allTransactions.size()) {
+            int endItem = Math.min(startItem + pageSize, allTransactions.size());
+            paginatedTransactions = allTransactions.subList(startItem, endItem);
+        } else {
+            paginatedTransactions = Collections.emptyList();
+        }
+
+        return new PageImpl<>(paginatedTransactions, pageable, allTransactions.size());
     }
 
     public void deleteTransactionsByUser(Long userId) {

@@ -6,6 +6,8 @@ import com.ethan.apiproject.repository.CommunitiesRepository;
 
 import com.ethan.apiproject.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +23,10 @@ public class CommunitiesService {
     public Communities createCommunity(Communities communities){
         return communitiesRepository.save(communities);
     }
-    public List<Communities> communitiesFindAll(){
-
-        return communitiesRepository.findAll();
+    public Page<Communities> listAllCommunities(Pageable pageable) {
+        return communitiesRepository.findAll(pageable);
     }
+
     public void deleteCommunity(Communities communities){
 
         communitiesRepository.delete(communities);

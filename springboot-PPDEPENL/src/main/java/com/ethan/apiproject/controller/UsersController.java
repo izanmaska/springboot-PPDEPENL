@@ -4,6 +4,8 @@ import com.ethan.apiproject.model.Transactions;
 import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +27,11 @@ public class UsersController {
     }
 
     @GetMapping("/users")
-    private ResponseEntity<List<Users>> listAllUsers (){
-        return ResponseEntity.ok(usersService.usersFindAll());
+    private ResponseEntity<Page<Users>> listAllUsers(Pageable pageable) {
+        Page<Users> usersPage = usersService.usersFindAll(pageable);
+        return ResponseEntity.ok(usersPage);
     }
+
 
     @GetMapping ("/{id}")
     private ResponseEntity<Optional<Users>> findUserById (@PathVariable ("id") Long id){

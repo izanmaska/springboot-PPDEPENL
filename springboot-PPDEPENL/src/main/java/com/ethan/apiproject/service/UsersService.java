@@ -5,6 +5,8 @@ import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.repository.TransactionsRepository;
 import com.ethan.apiproject.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +22,9 @@ public class UsersService {
     public Users createUser(Users users){
         return usersRepository.save(users);
     }
-    public List<Users> usersFindAll(){
-        return usersRepository.findAll();
-    }
-    public void deleteUser(Users users){
+    public Page<Users> usersFindAll(Pageable pageable) {
+        return usersRepository.findAll(pageable);
+    }    public void deleteUser(Users users){
         usersRepository.delete(users);
     }
 

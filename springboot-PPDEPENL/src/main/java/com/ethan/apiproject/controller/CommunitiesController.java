@@ -2,6 +2,10 @@ package com.ethan.apiproject.controller;
 
 import com.ethan.apiproject.model.Communities;
 import com.ethan.apiproject.service.CommunitiesService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +30,16 @@ public class CommunitiesController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    @GetMapping("/communities")
-    private ResponseEntity<List<Communities>> listAllCommunities (){
-        return ResponseEntity.ok(communitiesService.communitiesFindAll());
+    @GetMapping
+    public ResponseEntity<Page<Communities>> listAllCommunities(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Page<Communities> communitiesPage = communitiesService.listAllCommunities(pageable);
+        return ResponseEntity.ok(communitiesPage);
     }
+
 
     @DeleteMapping
     private ResponseEntity<Void> deleteCommunity (@RequestBody Communities communities){

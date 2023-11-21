@@ -1,6 +1,15 @@
 package com.ethan.apiproject.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
+import java.util.Set;
+import java.util.UUID;
+
+import com.ethan.apiproject.model.enums.Status;
+import com.ethan.apiproject.model.enums.Type;
+import com.ethan.apiproject.model.enums.UserRole;
+import org.hibernate.annotations.GenericGenerator;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,12 +18,16 @@ import java.util.List;
 @Table(name = "users")
 public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "VARCHAR(32)")
+    private UUID id;
 
     @Column(name = "user_name")
     private String userName;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "email")
     private String email;
@@ -22,6 +35,7 @@ public class Users {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type")
@@ -32,8 +46,13 @@ public class Users {
 
     @Column(name = "date_updated")
     private LocalDateTime dateUpdated;
-    @Column(name = "url")
-    private String url;
+    @ElementCollection(targetClass = UserRole.class)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Set<UserRole> roles;
+
+
     @ManyToMany(mappedBy = "users")
     private List<Communities> communities;
 
@@ -41,26 +60,30 @@ public class Users {
     public Users() {
     }
 
-    public Users(Long id, String userName, String email, Status status, Type userType, LocalDateTime dateCreated, LocalDateTime dateUpdated, String url) {
+    public Users(UUID id, String userName,String password, String email, Status status, Type userType, Set<UserRole> roles, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.userName = userName;
+        this.password = password;
         this.email = email;
         this.status = status;
         this.userType = userType;
+        this.roles = roles;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
-        this.url = url;
+
     }
 
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
     public String getUserName() {
         return userName;
     }
-
+    public String getPassword() {
+        return password;
+    }
     public String getEmail() {
         return email;
     }
@@ -81,18 +104,19 @@ public class Users {
         return dateUpdated;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
     // Setter methods
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
     }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 
     public void setEmail(String email) {
         this.email = email;
@@ -106,6 +130,7 @@ public class Users {
         this.userType = userType;
     }
 
+
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
@@ -114,8 +139,7 @@ public class Users {
         this.dateUpdated = dateUpdated;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
+    public void setRoles(Set<Role> roles) {this.roles = roles;
+    }
 }

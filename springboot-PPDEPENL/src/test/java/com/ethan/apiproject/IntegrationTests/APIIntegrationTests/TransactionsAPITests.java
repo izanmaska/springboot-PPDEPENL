@@ -1,6 +1,6 @@
 package com.ethan.apiproject.IntegrationTests.APIIntegrationTests;
 import com.ethan.apiproject.model.Transactions;
-import com.ethan.apiproject.model.Type;
+import com.ethan.apiproject.model.enums.Type;
 import com.ethan.apiproject.repository.TransactionsRepository;
 import com.ethan.apiproject.repository.UsersRepository;
 import com.ethan.apiproject.service.TransactionsService;
@@ -16,6 +16,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,7 +103,7 @@ public class TransactionsAPITests {
 
         Transactions createdTransaction = createResponse.getBody();
         assert createdTransaction != null;
-        Long transactionId = createdTransaction.getId();
+        UUID transactionId = createdTransaction.getId();
 
         ResponseEntity<Transactions> findResponse = restTemplate.getForEntity(
                 baseUrl + "/api/transactions/" + transactionId,
@@ -121,7 +123,6 @@ public class TransactionsAPITests {
         com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
         newTransaction.setUser1Id(1L);
         newTransaction.setUser2Id(2L);
-        newTransaction.setUrl("http://example.com");
 
         ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
                 baseUrl + "/api/transactions",
@@ -131,7 +132,7 @@ public class TransactionsAPITests {
 
         com.ethan.apiproject.model.Transactions createdTransaction = createResponse.getBody();
         assert createdTransaction != null;
-        Long transactionId = createdTransaction.getId();
+        UUID transactionId = createdTransaction.getId();
 
         restTemplate.delete(baseUrl + "/api/transactions/" + transactionId);
 
@@ -148,7 +149,6 @@ public class TransactionsAPITests {
         com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
         newTransaction.setUser1Id(1L);
         newTransaction.setUser2Id(2L);
-        newTransaction.setUrl("http://example.com");
 
         ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
                 baseUrl + "/api/transactions",
@@ -158,7 +158,7 @@ public class TransactionsAPITests {
 
         com.ethan.apiproject.model.Transactions createdTransaction = createResponse.getBody();
         assert createdTransaction != null;
-        Long transactionId = createdTransaction.getId();
+        UUID transactionId = createdTransaction.getId();
 
         ResponseEntity<com.ethan.apiproject.model.Transactions[]> historyResponse = restTemplate.getForEntity(
                 baseUrl + "/api/users/1/transactions",
@@ -184,7 +184,7 @@ public class TransactionsAPITests {
 
         Transactions createdTransaction = createResponse.getBody();
         assertNotNull(createdTransaction);
-        Long transactionId = createdTransaction.getId();
+        UUID transactionId = createdTransaction.getId();
 
         ResponseEntity<Page<Transactions>> transactionsByUserResponse = restTemplate.exchange(
                 baseUrl + "/api/transactions/1/transactions?page=0&size=10",

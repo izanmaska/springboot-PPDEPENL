@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/communities")
@@ -30,7 +31,7 @@ public class CommunitiesController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    @GetMapping
+    @GetMapping("/communities")
     public ResponseEntity<Page<Communities>> listAllCommunities(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -47,11 +48,11 @@ public class CommunitiesController {
         return ResponseEntity.ok().build();
     }
     @GetMapping ("/{id}")
-    private ResponseEntity<Optional<Communities>> findCommunityById(@PathVariable ("id") Long id){
+    private ResponseEntity<Optional<Communities>> findCommunityById(@PathVariable ("id") UUID id){
         return ResponseEntity.ok(communitiesService.communityFindById(id));
     }
     @GetMapping ("/owner/{id}")
-    public ResponseEntity<List<Communities>> findCommunitiesByOwnerId(@PathVariable Long ownerId) {
+    public ResponseEntity<List<Communities>> findCommunitiesByOwnerId(@PathVariable UUID ownerId) {
         List<Communities> communities = communitiesService.findCommunitiesByOwnerId(ownerId);
         return ResponseEntity.ok(communities);
     }
@@ -67,7 +68,7 @@ public class CommunitiesController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<Communities> updateCommunity(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestBody Communities updatedCommunity
     ) {
         Communities community = communitiesService.communityFindById(id).orElse(null);
@@ -83,7 +84,7 @@ public class CommunitiesController {
         return ResponseEntity.ok(updated);
     }
     @PostMapping("/{communityId}/addUser/{userId}")
-    public ResponseEntity<Communities> addUserToCommunity(@PathVariable Long communityId, @PathVariable Long userId) {
+    public ResponseEntity<Communities> addUserToCommunity(@PathVariable UUID communityId, @PathVariable UUID userId) {
         Communities updatedCommunity = communitiesService.addUserToCommunity(communityId, userId);
 
         if (updatedCommunity != null) {
@@ -94,7 +95,7 @@ public class CommunitiesController {
     }
 
     @PostMapping("/{communityId}/removeUser/{userId}")
-    public ResponseEntity<Communities> removeUserFromCommunity(@PathVariable Long communityId, @PathVariable Long userId) {
+    public ResponseEntity<Communities> removeUserFromCommunity(@PathVariable UUID communityId, @PathVariable UUID userId) {
         Communities updatedCommunity = communitiesService.removeUserFromCommunity(communityId, userId);
 
         if (updatedCommunity != null) {

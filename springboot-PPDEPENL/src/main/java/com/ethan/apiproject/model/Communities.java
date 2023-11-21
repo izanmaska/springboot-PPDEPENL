@@ -1,22 +1,28 @@
 package com.ethan.apiproject.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
+
+import com.ethan.apiproject.model.enums.Status;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "communities")
 public class Communities {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "VARCHAR(32)")
+    private UUID id;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "owner_id")
-    private Long ownerId;
+    private UUID ownerId;
 
     @Column(name = "owner_username")
     private String ownerUsername;
@@ -31,8 +37,7 @@ public class Communities {
     @Column(name = "date_updated")
     private LocalDateTime dateUpdated;
 
-    @Column(name = "url")
-    private String url;
+
     @ManyToMany
     @JoinTable(
             name = "community_users",
@@ -48,7 +53,7 @@ public class Communities {
     public Communities() {
     }
 
-    public Communities(Long id, String name, Long ownerId, String ownerUsername, Status status, LocalDateTime dateCreated, LocalDateTime dateUpdated, String url) {
+    public Communities(UUID id, String name, UUID ownerId, String ownerUsername, Status status, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.name = name;
         this.ownerId = ownerId;
@@ -56,10 +61,10 @@ public class Communities {
         this.status = status;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
-        this.url = url;
+
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -68,7 +73,7 @@ public class Communities {
     }
 
 
-    public Long getOwnerId() {
+    public UUID getOwnerId() {
         return ownerId;
     }
 
@@ -88,12 +93,9 @@ public class Communities {
         return dateUpdated;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -102,7 +104,7 @@ public class Communities {
     }
 
 
-    public void setOwnerId(Long ownerId) {
+    public void setOwnerId(UUID ownerId) {
         this.ownerId = ownerId;
     }
 
@@ -122,9 +124,7 @@ public class Communities {
         this.dateUpdated = dateUpdated;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+
 
 
 

@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -34,7 +35,7 @@ public class TransactionsController {
         return ResponseEntity.ok(transactionsPage);
     }
     @GetMapping (value = "/{id}")
-    private ResponseEntity<Optional<Transactions>> findTransactionById (@PathVariable ("id") Long id){
+    private ResponseEntity<Optional<Transactions>> findTransactionById (@PathVariable ("id") UUID id){
         return ResponseEntity.ok(transactionsService.transactionsFindById(id));
     }
     @PostMapping
@@ -49,7 +50,7 @@ public class TransactionsController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void updateTransaction(@RequestBody Transactions transactions, @PathVariable Long id){
+    public void updateTransaction(@RequestBody Transactions transactions, @PathVariable UUID id){
         if(!transactionsService.transactionsExistsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Content not found!");
         }
@@ -63,7 +64,7 @@ public class TransactionsController {
 
 
     @GetMapping("/{userId}/transactions")
-    public ResponseEntity<Page<Transactions>> listTransactionsByUser(@PathVariable Long userId,
+    public ResponseEntity<Page<Transactions>> listTransactionsByUser(@PathVariable UUID userId,
                                                                      @RequestParam(name = "page", defaultValue = "0") int page,
                                                                      @RequestParam(name = "size", defaultValue = "10") int size) {
         Page<Transactions> transactionsPage = transactionsService.listTransactionsByUser(userId, PageRequest.of(page, size));
@@ -72,7 +73,7 @@ public class TransactionsController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}/transactions")
-    public void deleteTransactionsByUser(@PathVariable Long userId) {
+    public void deleteTransactionsByUser(@PathVariable UUID userId) {
         transactionsService.deleteTransactionsByUser(userId);
     }
 

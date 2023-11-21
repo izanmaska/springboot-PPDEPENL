@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.ethan.apiproject.model.PagedResponse;
@@ -15,6 +14,8 @@ import com.ethan.apiproject.model.Users;
 import org.springframework.http.HttpMethod;
 import org.springframework.core.ParameterizedTypeReference;
 
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,7 +115,7 @@ public class CommunitiesAPITests {
 
         Communities createdCommunity = createResponse.getBody();
         assert createdCommunity != null;
-        Long communityId = createdCommunity.getId();
+        UUID communityId = createdCommunity.getId();
 
         newCommunity.setName("Updated Community Name");
         newCommunity.setOwnerUsername("Updated Owner");
@@ -149,7 +150,7 @@ public class CommunitiesAPITests {
 
         Communities createdCommunity = createCommunityResponse.getBody();
         assertNotNull(createdCommunity);
-        Long communityId = createdCommunity.getId();
+        UUID communityId = createdCommunity.getId();
 
         createTestUser("User1");
         createTestUser("User2");
@@ -204,7 +205,7 @@ public class CommunitiesAPITests {
         restTemplate.postForEntity(baseUrl + "/api/users", newUser, Users.class);
     }
 
-    private void addCommunityMember(Long communityId, String username) {
+    private void addCommunityMember(UUID communityId, String username) {
         restTemplate.postForEntity(
                 baseUrl + "/api/communities/" + communityId + "/members/" + username,
                 null,

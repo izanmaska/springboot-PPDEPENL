@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -34,7 +35,7 @@ public class UsersController {
 
 
     @GetMapping ("/{id}")
-    private ResponseEntity<Optional<Users>> findUserById (@PathVariable ("id") Long id){
+    private ResponseEntity<Optional<Users>> findUserById (@PathVariable ("id") UUID id){
         return ResponseEntity.ok(usersService.userFindById(id));
     }
 
@@ -49,16 +50,16 @@ public class UsersController {
     }
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void updateUser(@RequestBody Users users, @PathVariable Long id){
+    public void updateUser(@RequestBody Users users, @PathVariable UUID id){
         if(!usersService.userExistsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Content not found!");
         }
         usersService.createUser(users);
     }
 
-    @DeleteMapping
-    private ResponseEntity<Void> deleteUsers (@RequestBody Users users){
-        usersService.deleteUser(users);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable UUID userId) {
+        usersService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 

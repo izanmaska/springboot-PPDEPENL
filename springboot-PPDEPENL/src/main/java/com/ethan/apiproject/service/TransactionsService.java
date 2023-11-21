@@ -1,7 +1,7 @@
 package com.ethan.apiproject.service;
 
 import com.ethan.apiproject.model.Transactions;
-import com.ethan.apiproject.model.Type;
+import com.ethan.apiproject.model.enums.Type;
 import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.repository.TransactionsRepository;
 import com.ethan.apiproject.repository.UsersRepository;
@@ -9,16 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TransactionsService {
@@ -47,19 +43,19 @@ public class TransactionsService {
         transactionsRepository.delete(transactions);
     }
 
-    public Optional<Transactions> transactionsFindById(Long id){
+    public Optional<Transactions> transactionsFindById(UUID id){
         return transactionsRepository.findById(id);
     }
-    public List<Transactions> getAllTransactionsByUserId(Long userId) {
+    public List<Transactions> getAllTransactionsByUserId(UUID userId) {
         return transactionsRepository.findByUser1IdOrUser2Id(userId, userId);
     }
 
 
-    public boolean transactionsExistsById(Long id) {
+    public boolean transactionsExistsById(UUID id) {
         return transactionsRepository.existsById(id);
     }
 
-    public Page<Transactions> listTransactionsByUser(Long userId, Pageable pageable) {
+    public Page<Transactions> listTransactionsByUser(UUID userId, Pageable pageable) {
         List<Transactions> allTransactions = transactionsRepository.findAllByUser1IdOrUser2Id(userId, userId);
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
@@ -76,7 +72,7 @@ public class TransactionsService {
         return new PageImpl<>(paginatedTransactions, pageable, allTransactions.size());
     }
 
-    public void deleteTransactionsByUser(Long userId) {
+    public void deleteTransactionsByUser(UUID userId) {
         transactionsRepository.deleteAllByUser1IdOrUser2Id(userId, userId);
     }
 

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 @Service
 
 public class CommunitiesService {
@@ -33,15 +35,15 @@ public class CommunitiesService {
     }
 
 
-    public Optional<Communities> communityFindById(Long id){
+    public Optional<Communities> communityFindById(UUID id){
 
-        return communitiesRepository.findById(id);
+        return communitiesRepository.findCommunityById(id);
     }
-    public List<Communities> findCommunitiesByOwnerId(Long ownerId) {
+    public List<Communities> findCommunitiesByOwnerId(UUID ownerId) {
         return communitiesRepository.findByOwnerId(ownerId);
     }
-    public Communities addUserToCommunity(Long communityId, Long userId) {
-        Communities community = communitiesRepository.findById(communityId).orElse(null);
+    public Communities addUserToCommunity(UUID communityId, UUID userId) {
+        Communities community = communitiesRepository.findCommunityById(communityId).orElse(null);
         Users user = usersRepository.findById(userId).orElse(null);
 
         if (community != null && user != null) {
@@ -55,8 +57,8 @@ public class CommunitiesService {
         return communitiesRepository.save(community);
     }
 
-    public Communities removeUserFromCommunity(Long communityId, Long userId) {
-        Communities community = communitiesRepository.findById(communityId).orElse(null);
+    public Communities removeUserFromCommunity(UUID communityId, UUID userId) {
+        Communities community = communitiesRepository.findCommunityById(communityId).orElse(null);
         Users user = usersRepository.findById(userId).orElse(null);
 
         if (community != null && user != null) {

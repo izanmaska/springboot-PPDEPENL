@@ -23,6 +23,14 @@ spring:
     password: pass
     baseline-description: "init"
     baseline-version: 0
+
+# JWT Properties
+jwt:
+  secret: 8DKXq6XNr6o+ePpNay+V1nvNyaF6Rumj
+  expiration-time: 86400000 # 1 day in milliseconds
+  token-prefix: Bearer
+  header-string: Authorization
+
 # Logging SQL queries
 #logging:
 #  level:

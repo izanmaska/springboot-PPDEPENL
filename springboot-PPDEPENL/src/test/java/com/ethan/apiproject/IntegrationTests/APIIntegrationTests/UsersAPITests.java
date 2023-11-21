@@ -1,5 +1,5 @@
 package com.ethan.apiproject.IntegrationTests.APIIntegrationTests;
-import com.ethan.apiproject.model.Type;
+import com.ethan.apiproject.model.enums.Type;
 import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.service.UsersService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -82,7 +84,7 @@ public class UsersAPITests {
 
         Users createdUser = createResponse.getBody();
         assert createdUser != null;
-        Long userId = createdUser.getId();
+        UUID userId = createdUser.getId();
 
         ResponseEntity<Users> findResponse = restTemplate.getForEntity(
                 baseUrl + "/api/users/" + userId,
@@ -111,7 +113,7 @@ public class UsersAPITests {
 
         com.ethan.apiproject.model.Users createdUser = createResponse.getBody();
         assert createdUser != null;
-        Long userId = createdUser.getId();
+        UUID userId = createdUser.getId();
 
         newUser.setUserName("UpdatedUserName");
         newUser.setEmail("updateduser@example.com");
@@ -145,7 +147,7 @@ public class UsersAPITests {
 
         com.ethan.apiproject.model.Users createdUser = createResponse.getBody();
         assert createdUser != null;
-        Long userId = createdUser.getId();
+        UUID userId = createdUser.getId();
 
         restTemplate.delete(baseUrl + "/api/users/" + userId);
 

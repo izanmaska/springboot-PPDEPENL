@@ -48,8 +48,8 @@ public class TransactionsAPITests {
     @Test
     public void testCreateTransaction() {
         Transactions newTransaction = new Transactions();
-        newTransaction.setUser1Id(1L);
-        newTransaction.setUser2Id(2L);
+        newTransaction.setUser1Id(UUID.randomUUID());
+        newTransaction.setUser2Id(UUID.randomUUID());
         newTransaction.setUser1Type(Type.B2C);
         newTransaction.setUser2Type(Type.B2C);
 

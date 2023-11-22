@@ -140,6 +140,6 @@ public class Users {
     }
 
 
-    public void setRoles(Set<Role> roles) {this.roles = roles;
+    public void setRoles(Set<UserRole> roles) {this.roles = roles;
     }
 }

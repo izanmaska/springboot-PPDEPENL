@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,6 +33,7 @@ public class CommunitiesController {
         }
     }
     @GetMapping("/communities")
+    @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
     public ResponseEntity<Page<Communities>> listAllCommunities(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -43,6 +45,7 @@ public class CommunitiesController {
 
 
     @DeleteMapping
+    @PreAuthorize("hasRole('ADMIN')")
     private ResponseEntity<Void> deleteCommunity (@RequestBody Communities communities){
         communitiesService.deleteCommunity(communities);
         return ResponseEntity.ok().build();
@@ -58,6 +61,7 @@ public class CommunitiesController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
     public ResponseEntity<Communities> createCommunity(@RequestBody Communities communities) {
         Communities createdCommunity = communitiesService.createCommunity(communities);
         if (createdCommunity != null) {

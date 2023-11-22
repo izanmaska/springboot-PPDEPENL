@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,6 +31,7 @@ public class TransactionsController {
 
 
     @GetMapping("/transactions")
+    @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
     private ResponseEntity<Page<Transactions>> listAllTransactions(Pageable pageable) {
         Page<Transactions> transactionsPage = transactionsService.transactionsFindAll(pageable);
         return ResponseEntity.ok(transactionsPage);
@@ -50,6 +52,7 @@ public class TransactionsController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
     public void updateTransaction(@RequestBody Transactions transactions, @PathVariable UUID id){
         if(!transactionsService.transactionsExistsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Content not found!");
@@ -57,6 +60,7 @@ public class TransactionsController {
         transactionsService.createTransaction(transactions);
     }
     @DeleteMapping
+    @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
     private ResponseEntity<Void> deleteTransaction (@RequestBody Transactions transactions){
         transactionsService.deleteTransaction(transactions);
         return ResponseEntity.ok().build();

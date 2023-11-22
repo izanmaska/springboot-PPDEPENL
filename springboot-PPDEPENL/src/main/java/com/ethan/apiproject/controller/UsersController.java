@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,6 +29,7 @@ public class UsersController {
     }
 
     @GetMapping("/users")
+    @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
     private ResponseEntity<Page<Users>> listAllUsers(Pageable pageable) {
         Page<Users> usersPage = usersService.usersFindAll(pageable);
         return ResponseEntity.ok(usersPage);
@@ -40,6 +42,8 @@ public class UsersController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
+
     private ResponseEntity<Users> saveUser (@RequestBody Users users){
         Users temp = usersService.createUser(users);
         try {
@@ -58,6 +62,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable UUID userId) {
         usersService.deleteUser(userId);
         return ResponseEntity.ok().build();

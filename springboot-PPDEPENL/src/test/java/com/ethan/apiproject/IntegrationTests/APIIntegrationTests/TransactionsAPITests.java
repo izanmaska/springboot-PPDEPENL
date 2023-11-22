@@ -90,8 +90,8 @@ public class TransactionsAPITests {
     @Test
     public void testFindTransactionById() {
         Transactions newTransaction = new Transactions();
-        newTransaction.setUser1Id(1L);
-        newTransaction.setUser2Id(2L);
+        newTransaction.setUser1Id(UUID.randomUUID());
+        newTransaction.setUser2Id(UUID.randomUUID());
         newTransaction.setUser1Type(Type.B2C);
         newTransaction.setUser2Type(Type.B2C);
 
@@ -121,8 +121,8 @@ public class TransactionsAPITests {
     @Test
     public void testDeleteTransaction() {
         com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
-        newTransaction.setUser1Id(1L);
-        newTransaction.setUser2Id(2L);
+        newTransaction.setUser1Id(UUID.randomUUID());
+        newTransaction.setUser2Id(UUID.randomUUID());
 
         ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
                 baseUrl + "/api/transactions",
@@ -147,8 +147,8 @@ public class TransactionsAPITests {
     @Test
     public void testTransactionHistory() {
         com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
-        newTransaction.setUser1Id(1L);
-        newTransaction.setUser2Id(2L);
+        newTransaction.setUser1Id(UUID.randomUUID());
+        newTransaction.setUser2Id(UUID.randomUUID());
 
         ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
                 baseUrl + "/api/transactions",
@@ -171,8 +171,8 @@ public class TransactionsAPITests {
     @Test
     public void testListTransactionsByUser() {
         Transactions newTransaction = new Transactions();
-        newTransaction.setUser1Id(1L);
-        newTransaction.setUser2Id(2L);
+        newTransaction.setUser1Id(UUID.randomUUID());
+        newTransaction.setUser2Id(UUID.randomUUID());
         newTransaction.setUser1Type(Type.B2C);
         newTransaction.setUser2Type(Type.B2C);
 

@@ -10,9 +10,9 @@ import com.ethan.apiproject.model.enums.Type;
 import com.ethan.apiproject.model.enums.UserRole;
 import org.hibernate.annotations.GenericGenerator;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -36,7 +36,6 @@ public class Users {
     @Column(name = "status")
     private Status status;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type")
     private Type userType;
@@ -46,21 +45,20 @@ public class Users {
 
     @Column(name = "date_updated")
     private LocalDateTime dateUpdated;
+
     @ElementCollection(targetClass = UserRole.class)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Set<UserRole> roles;
 
-
     @ManyToMany(mappedBy = "users")
     private List<Communities> communities;
-
 
     public Users() {
     }
 
-    public Users(UUID id, String userName,String password, String email, Status status, Type userType, Set<UserRole> roles, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
+    public Users(UUID id, String userName, String password, String email, Status status, Type userType, Set<UserRole> roles, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -70,9 +68,7 @@ public class Users {
         this.roles = roles;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
-
     }
-
 
     public UUID getId() {
         return id;
@@ -81,9 +77,11 @@ public class Users {
     public String getUserName() {
         return userName;
     }
+
     public String getPassword() {
         return password;
     }
+
     public String getEmail() {
         return email;
     }
@@ -104,8 +102,10 @@ public class Users {
         return dateUpdated;
     }
 
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
 
-    // Setter methods
     public void setId(UUID id) {
         this.id = id;
     }
@@ -113,10 +113,10 @@ public class Users {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public void setEmail(String email) {
         this.email = email;
@@ -130,7 +130,6 @@ public class Users {
         this.userType = userType;
     }
 
-
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
@@ -139,7 +138,28 @@ public class Users {
         this.dateUpdated = dateUpdated;
     }
 
-
-    public void setRoles(Set<UserRole> roles) {this.roles = roles;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles.stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
     }
+    public static Set<Role> convertToRolesSet(Set<UserRole> userRoles) {
+        return userRoles.stream()
+                .map(role -> new Role(role))
+                .collect(Collectors.toSet());
+    }
+
+    public static Users createTestUser(String userName, Set<UserRole> userRoles) {
+        Users testUser = new Users();
+        testUser.setUserName(userName);
+        testUser.setPassword("testPassword");
+        testUser.setEmail(userName + "@example.com");
+        testUser.setStatus(Status.ACTIVE);
+        testUser.setUserType(Type.B2C);
+        testUser.setRoles(convertToRolesSet(userRoles));
+        testUser.setDateCreated(LocalDateTime.now());
+        testUser.setDateUpdated(LocalDateTime.now());
+        return testUser;
+    }
+
 }

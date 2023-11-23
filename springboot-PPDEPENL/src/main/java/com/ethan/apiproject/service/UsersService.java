@@ -1,5 +1,6 @@
 package com.ethan.apiproject.service;
 
+import com.ethan.apiproject.model.Role;
 import com.ethan.apiproject.model.enums.Status;
 import com.ethan.apiproject.model.enums.UserRole;
 import com.ethan.apiproject.model.Users;
@@ -24,7 +25,7 @@ public class UsersService {
     public Users createUser(Users users){
         return usersRepository.save(users);
     }
-    public Users createUserWithRoles(Users user, Set<UserRole> roles) {
+    public Users createUserWithRoles(Users user, Set<Role> roles) {
         user.setRoles(roles);
         return usersRepository.save(user);
     }

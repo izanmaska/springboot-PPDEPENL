@@ -1,5 +1,7 @@
 package com.ethan.apiproject.IntegrationTests.APIIntegrationTests;
 
+import com.ethan.apiproject.model.Role;
+import com.ethan.apiproject.model.enums.UserRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ethan.apiproject.model.Communities;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.core.ParameterizedTypeReference;
 
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,6 +75,44 @@ public class CommunitiesAPITests {
         assertEquals(2, communitiesPage.getTotalPages());
 
         assertNotNull(communitiesPage.getContent());
+    }
+    @Test
+    public void testListAllCommunitiesAsAdmin() {
+        Set<UserRole> adminRoles = new HashSet<>();
+        adminRoles.add(UserRole.ADMIN);
+
+        Users adminUser = Users.createTestUser("admin", adminRoles);
+        restTemplate = restTemplate.withBasicAuth(adminUser.getUserName(), "password");
+
+        ResponseEntity<PagedResponse<Communities>> response = restTemplate.exchange(
+                baseUrl + ":" + port + "/api/communities",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<PagedResponse<Communities>>() {}
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        PagedResponse<Communities> communitiesPage = response.getBody();
+        assertNotNull(communitiesPage);
+    }
+
+
+    @Test
+    public void testListAllCommunitiesAsRegularUser() {
+        Set<UserRole> regularUserRoles = new HashSet<>();
+        regularUserRoles.add(UserRole.USER);
+
+        Users regularUser = Users.createTestUser("user", regularUserRoles);
+        restTemplate = restTemplate.withBasicAuth(regularUser.getUserName(), "password");
+
+        ResponseEntity<PagedResponse<Communities>> response = restTemplate.exchange(
+                baseUrl + ":" + port + "/api/communities",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<PagedResponse<Communities>>() {}
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test

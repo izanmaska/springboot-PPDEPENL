@@ -15,10 +15,10 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private UserRole name;
 
-    // Constructors, getters, and setters...
 
     public Role() {
     }
+
 
     public Role(UserRole name) {
         this.name = name;

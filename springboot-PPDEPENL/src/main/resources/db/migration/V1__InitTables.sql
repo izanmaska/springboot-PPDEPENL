@@ -25,9 +25,9 @@ CREATE TABLE if not exists communities (
 CREATE TABLE if not exists transactions (
     id UUID PRIMARY KEY,
     user1_id UUID,
-    user1_type SMALLINT,
+    user1_type INT,
     user2_id UUID,
-    user2_type SMALLINT,
+    user2_type INT,
     date timestamp NOT NULL
 );
 
@@ -42,5 +42,25 @@ CREATE TABLE IF NOT EXISTS community_users (
 CREATE TABLE if not exists offering (
     id UUID PRIMARY KEY,
     price DECIMAL NOT NULL,
+    currency VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE if not exists roles (
+    name VARCHAR(10) PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS products (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL NOT NULL,
+    currency VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS services (
+    id UUID PRIMARY KEY,
+    price DECIMAL NOT NULL,
     currency VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
 );

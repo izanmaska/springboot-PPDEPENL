@@ -1,7 +1,5 @@
 package com.ethan.apiproject.model.offerings;
 
-
-
 import com.ethan.apiproject.model.enums.Currency;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,6 +22,7 @@ public abstract class Offering {
     @Enumerated(EnumType.STRING)
     @Column(name = "currency")
     private Currency currency;
+
     public Offering() {
     }
 
@@ -32,7 +31,6 @@ public abstract class Offering {
         this.currency = currency;
     }
 
-    // Getters and Setters
     public UUID getId() {
         return id;
     }
@@ -52,5 +50,4 @@ public abstract class Offering {
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
-
 }

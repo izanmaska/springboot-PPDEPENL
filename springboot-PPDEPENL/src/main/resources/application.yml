@@ -1,15 +1,15 @@
-# DataSource settings
+# application.yml
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
     url: jdbc:postgresql://localhost:5432/postgres
     password: pass
-  # Hibernate settings
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -24,19 +24,15 @@ spring:
     baseline-description: "init"
     baseline-version: 0
 
-# JWT Properties
 jwt:
   secret: 8DKXq6XNr6o+ePpNay+V1nvNyaF6Rumj
-  expiration-time: 86400000 # 1 day in milliseconds
+  expiration-time: 86400000
   token-prefix: Bearer
   header-string: Authorization
 
-# Logging SQL queries
-#logging:
-#  level:
-#    org:
-#      springframework: DEBUG
-
-# Server port (you can change it to your desired port)
 server:
   port: 8080
+
+currency:
+  api:
+    key: cur_live_nrIl31BQlFn4J9AXmbz2p6vMau5ZeuySaV9p7AjZ

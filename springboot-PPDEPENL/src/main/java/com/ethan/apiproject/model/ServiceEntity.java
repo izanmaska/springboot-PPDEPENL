@@ -12,8 +12,6 @@ public class ServiceEntity extends Offering {
 
     private String name;
     private String description;
-    private Currency currency;
-
 
     public ServiceEntity() {
     }
@@ -21,9 +19,8 @@ public class ServiceEntity extends Offering {
     public ServiceEntity(String name, String description, Currency currency) {
         this.name = name;
         this.description = description;
-        this.currency = currency;
+        setCurrency(currency);
     }
-
 
     public String getName() {
         return name;
@@ -39,13 +36,5 @@ public class ServiceEntity extends Offering {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
     }
 }

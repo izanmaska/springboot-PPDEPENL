@@ -9,7 +9,7 @@ public class CurrencyConversionService {
     @Value("${currency.api.key}")
     private String apiKey;
 
-    private final String apiUrl = "https://api.example.com/currency-convert";
+    private final String apiUrl = "https://api.currencyapi.com/v3/latest?apikey=cur_live_nrIl31BQlFn4J9AXmbz2p6vMau5ZeuySaV9p7AjZ";
 
     private final RestTemplate restTemplate;
 

@@ -50,7 +50,6 @@ public class Transactions {
         this.date = date;
 
     }
-    // Getter methods
 
     public UUID getId() {
         return id;

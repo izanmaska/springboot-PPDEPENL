@@ -6,11 +6,12 @@ import com.google.firebase.FirebaseOptions;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class FirebaseInitializer {
     public static void initialize() {
         try {
-            FileInputStream serviceAccount = new FileInputStream("firebase/serviceAccountKey.json");
+            InputStream serviceAccount = FirebaseInitializer.class.getClassLoader().getResourceAsStream("firebase/serviceAccountKey.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))

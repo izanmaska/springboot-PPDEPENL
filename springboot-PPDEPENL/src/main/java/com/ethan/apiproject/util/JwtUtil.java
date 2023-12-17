@@ -1,70 +1,65 @@
 package com.ethan.apiproject.util;
 
-import com.ethan.apiproject.config.JwtProperties;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ethan.apiproject.model.User;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
 
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final SecretKey secret;
+    private final Long expiration;
 
-    public String generateToken(String username) {
+    public JwtUtil(Environment environment) {
+        this.secret = Keys.hmacShaKeyFor(environment.getProperty("jwt.secret").getBytes()) ;
+        this.expiration = environment.getProperty("jwt.expiration-time", Long.class);
+    }
+
+    public String generateToken(User user) {
+        var authoroties = new HashMap<String, Object>();
+        authoroties.put("authorities", user.getRoles());
+
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(user.getUserName())
+                .addClaims(authoroties)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
-                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecret())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(secret)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtProperties.getSecret()).parseClaimsJws(token);
+            JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(secret).build();
+            Jws<Claims> jws =jwtParser.parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    public String extractUserName(String token){
+        try {
+            JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(secret).build();
+            Jws<Claims> jws =jwtParser.parseClaimsJws(token);
+
+            String username = jws.getBody().getSubject();
+            return username;
+        } catch (Exception e) {
+            return null;
         }
-        return null;
-    }
-
-    private boolean isTokenExpired(String token) {
-        Date expirationDate = Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
-
-        return expirationDate.before(new Date());
-    }
-
-    public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtProperties.getSecret()).parseClaimsJws(token).getBody();
-        String username = claims.getSubject();
-        Collection<? extends GrantedAuthority> authorities =
-                ((Collection<?>) claims.get("authorities")).stream()
-                        .map(authority -> new SimpleGrantedAuthority((String) authority))
-                        .collect(Collectors.toList());
-        return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }
 }

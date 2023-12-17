@@ -1,28 +1,49 @@
 package com.ethan.apiproject.service;
 
-import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.User;
+import com.ethan.apiproject.model.enums.UserRole;
 import com.ethan.apiproject.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+import java.util.Collection;
+import java.util.stream.Collectors;
 
-    @Autowired
-    private UsersRepository usersRepository;
+
+@Service
+public class UserDetailsServiceImpl implements UserDetailService {
+
+    private final UsersRepository usersRepository;
+
+    public UserDetailsServiceImpl(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = usersRepository.findByUserName(username)
+        User user = usersRepository.findByUserName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        System.out.println("------------------------------------------------");
+        System.out.println(user);
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), true, true, true,
+                true, getAuthorities(user.getRoles()));
+    }
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUserName())
-                .password(user.getPassword())
-                .roles("USER")
-                .build();
+    public User getUserByUserName(String userName){
+        return usersRepository.findByUserName(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userName));
+    }
+
+
+    private Collection<GrantedAuthority> getAuthorities(Collection<UserRole> roles) {
+
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" +role.name()))
+                .collect(Collectors.toList());
+
+
     }
 }

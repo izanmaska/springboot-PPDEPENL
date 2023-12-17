@@ -1,10 +1,9 @@
 package com.ethan.apiproject.controller;
 
-import com.ethan.apiproject.model.AuthRequest;
-import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.User;
 import com.ethan.apiproject.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,20 +12,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
-    @Autowired
-    private AuthService authService;
-
-    @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody AuthRequest authRequest) {
-        String jwt = authService.authenticateAndGenerateToken(authRequest.getUsername(), authRequest.getPassword());
-        return ResponseEntity.ok(jwt);
+    private final AuthService authService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody Users user) {
-        Users createdUser = authService.registerUser(user);
-        String jwt = authService.generateTokenForUser(createdUser);
-        return ResponseEntity.ok(jwt);
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        try {
+            User createdUser = authService.registerUser(user);
+            if (createdUser == null)
+                return ResponseEntity.badRequest().body("User Already Exists!");
+            return ResponseEntity.ok(authService.generateTokenForUser(createdUser));
+        }catch (Exception e){return ResponseEntity.internalServerError().body("An error occured during signup");}
+
+    }
+
+    @PostMapping("/registerModerator")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> registerModerator(@RequestBody User user){
+        User createdModerator = authService.registerModerator(user);
+        return ResponseEntity.ok(authService.generateTokenForUser(createdModerator));
     }
 }

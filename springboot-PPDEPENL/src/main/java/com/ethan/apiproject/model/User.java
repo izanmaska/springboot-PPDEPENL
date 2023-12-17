@@ -2,26 +2,27 @@ package com.ethan.apiproject.model;
 
 import javax.persistence.*;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import com.ethan.apiproject.model.enums.Status;
 import com.ethan.apiproject.model.enums.Type;
 import com.ethan.apiproject.model.enums.UserRole;
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-public class Users {
+@ToString
+public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "id", columnDefinition = "VARCHAR(32)")
-    private UUID id;
+    @Column(name = "id", columnDefinition = "VARCHAR(64)")
+    private String id;
 
     @Column(name = "user_name")
     private String userName;
@@ -46,19 +47,19 @@ public class Users {
     @Column(name = "date_updated")
     private LocalDateTime dateUpdated;
 
-    @ElementCollection(targetClass = UserRole.class)
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private Set<UserRole> roles;
+    private Collection<UserRole> roles;
 
-    @ManyToMany(mappedBy = "users")
-    private List<Communities> communities;
+//    @ManyToMany(mappedBy = "users")
+//    private List<Communities> communities;
 
-    public Users() {
+    public User() {
     }
 
-    public Users(UUID id, String userName, String password, String email, Status status, Type userType, Set<UserRole> roles, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
+    public User(String id, String userName, String password, String email, Status status, Type userType, Set<UserRole> roles, LocalDateTime dateCreated, LocalDateTime dateUpdated) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -70,7 +71,7 @@ public class Users {
         this.dateUpdated = dateUpdated;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -102,11 +103,11 @@ public class Users {
         return dateUpdated;
     }
 
-    public Set<UserRole> getRoles() {
+    public Collection<UserRole> getRoles() {
         return roles;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -138,19 +139,19 @@ public class Users {
         this.dateUpdated = dateUpdated;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles.stream()
                 .map(Role::getName)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
-    public static Set<Role> convertToRolesSet(Set<UserRole> userRoles) {
+    public static List<Role> convertToRolesSet(List<UserRole> userRoles) {
         return userRoles.stream()
                 .map(role -> new Role(role))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
-    public static Users createTestUser(String userName, Set<UserRole> userRoles) {
-        Users testUser = new Users();
+    public static User createTestUser(String userName, List<UserRole> userRoles) {
+        User testUser = new User();
         testUser.setUserName(userName);
         testUser.setPassword("testPassword");
         testUser.setEmail(userName + "@example.com");

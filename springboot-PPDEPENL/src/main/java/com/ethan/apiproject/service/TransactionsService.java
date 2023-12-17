@@ -2,7 +2,7 @@ package com.ethan.apiproject.service;
 
 import com.ethan.apiproject.model.Transactions;
 import com.ethan.apiproject.model.enums.Type;
-import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.User;
 import com.ethan.apiproject.repository.TransactionsRepository;
 import com.ethan.apiproject.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ public class TransactionsService {
     private UsersRepository usersRepository;
 
     public Transactions createTransaction(Transactions transactions) {
-        Users user1 = usersRepository.findById(transactions.getUser1Id()).orElse(null);
-        Users user2 = usersRepository.findById(transactions.getUser2Id()).orElse(null);
+        User user1 = usersRepository.findById(transactions.getUser1Id()).orElse(null);
+        User user2 = usersRepository.findById(transactions.getUser2Id()).orElse(null);
 
         if (user1 == null || user2 == null) {
             throw new IllegalArgumentException("Invalid user IDs in the transaction");

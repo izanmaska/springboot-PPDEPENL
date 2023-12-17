@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
 import java.util.List;
@@ -20,8 +19,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/communities")
 public class CommunitiesController {
-    @Autowired
-    private CommunitiesService communitiesService;
+    private final CommunitiesService communitiesService;
+
+    public CommunitiesController(CommunitiesService communitiesService) {
+        this.communitiesService = communitiesService;
+    }
 
     @PostMapping
     private ResponseEntity<Communities> saveCommunity (@RequestBody Communities communities){
@@ -88,7 +90,7 @@ public class CommunitiesController {
         return ResponseEntity.ok(updated);
     }
     @PostMapping("/{communityId}/addUser/{userId}")
-    public ResponseEntity<Communities> addUserToCommunity(@PathVariable UUID communityId, @PathVariable UUID userId) {
+    public ResponseEntity<Communities> addUserToCommunity(@PathVariable UUID communityId, @PathVariable String userId) {
         Communities updatedCommunity = communitiesService.addUserToCommunity(communityId, userId);
 
         if (updatedCommunity != null) {
@@ -99,7 +101,7 @@ public class CommunitiesController {
     }
 
     @PostMapping("/{communityId}/removeUser/{userId}")
-    public ResponseEntity<Communities> removeUserFromCommunity(@PathVariable UUID communityId, @PathVariable UUID userId) {
+    public ResponseEntity<Communities> removeUserFromCommunity(@PathVariable UUID communityId, @PathVariable String userId) {
         Communities updatedCommunity = communitiesService.removeUserFromCommunity(communityId, userId);
 
         if (updatedCommunity != null) {

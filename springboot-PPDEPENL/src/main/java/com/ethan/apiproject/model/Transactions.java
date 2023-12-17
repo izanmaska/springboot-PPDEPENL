@@ -21,14 +21,14 @@ public class Transactions {
 
 
     @Column(name = "user1_id")
-    private UUID user1Id;
+    private String user1Id;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "user1_type", nullable = false)
     private Type user1Type;
 
     @Column(name = "user2_id")
-    private UUID user2Id;
+    private String user2Id;
 
     @Column(name = "user2_type")
     private Type user2Type;
@@ -41,7 +41,7 @@ public class Transactions {
     public Transactions() {
     }
 
-    public Transactions(UUID id, UUID user1Id, Type user1Type, UUID user2Id, Type user2Type, LocalDateTime date) {
+    public Transactions(UUID id, String user1Id, Type user1Type, String user2Id, Type user2Type, LocalDateTime date) {
         this.id = id;
         this.user1Id = user1Id;
         this.user1Type = user1Type;
@@ -59,11 +59,11 @@ public class Transactions {
         this.id = id;
     }
 
-    public UUID getUser1Id() {
+    public String getUser1Id() {
         return user1Id;
     }
 
-    public void setUser1Id(UUID user1Id) {
+    public void setUser1Id(String user1Id) {
         this.user1Id = user1Id;
     }
 
@@ -75,11 +75,11 @@ public class Transactions {
         this.user1Type = user1Type;
     }
 
-    public UUID getUser2Id() {
+    public String getUser2Id() {
         return user2Id;
     }
 
-    public void setUser2Id(UUID user2Id) {
+    public void setUser2Id(String user2Id) {
         this.user2Id = user2Id;
     }
 

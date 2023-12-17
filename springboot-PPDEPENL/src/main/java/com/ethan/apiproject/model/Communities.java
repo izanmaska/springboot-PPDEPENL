@@ -44,9 +44,9 @@ public class Communities {
             joinColumns = @JoinColumn(name = "community_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<Users> users;
+    private List<User> users;
 
-    public List<Users> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 

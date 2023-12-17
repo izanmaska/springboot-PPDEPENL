@@ -1,7 +1,7 @@
 package com.ethan.apiproject.service;
 
 import com.ethan.apiproject.model.Communities;
-import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.User;
 import com.ethan.apiproject.repository.CommunitiesRepository;
 
 import com.ethan.apiproject.repository.UsersRepository;
@@ -42,9 +42,9 @@ public class CommunitiesService {
     public List<Communities> findCommunitiesByOwnerId(UUID ownerId) {
         return communitiesRepository.findByOwnerId(ownerId);
     }
-    public Communities addUserToCommunity(UUID communityId, UUID userId) {
+    public Communities addUserToCommunity(UUID communityId, String userId) {
         Communities community = communitiesRepository.findCommunityById(communityId).orElse(null);
-        Users user = usersRepository.findById(userId).orElse(null);
+        User user = usersRepository.findById(userId).orElse(null);
 
         if (community != null && user != null) {
             community.getUsers().add(user);
@@ -57,9 +57,9 @@ public class CommunitiesService {
         return communitiesRepository.save(community);
     }
 
-    public Communities removeUserFromCommunity(UUID communityId, UUID userId) {
+    public Communities removeUserFromCommunity(UUID communityId, String userId) {
         Communities community = communitiesRepository.findCommunityById(communityId).orElse(null);
-        Users user = usersRepository.findById(userId).orElse(null);
+        User user = usersRepository.findById(userId).orElse(null);
 
         if (community != null && user != null) {
             community.getUsers().remove(user);

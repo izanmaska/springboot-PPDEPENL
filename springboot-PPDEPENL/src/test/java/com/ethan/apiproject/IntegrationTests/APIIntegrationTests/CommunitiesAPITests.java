@@ -1,6 +1,5 @@
 package com.ethan.apiproject.IntegrationTests.APIIntegrationTests;
 
-import com.ethan.apiproject.model.Role;
 import com.ethan.apiproject.model.enums.UserRole;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ethan.apiproject.model.Communities;
@@ -12,13 +11,14 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.ethan.apiproject.model.PagedResponse;
-import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.User;
 import org.springframework.http.HttpMethod;
 import org.springframework.core.ParameterizedTypeReference;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,10 +78,10 @@ public class CommunitiesAPITests {
     }
     @Test
     public void testListAllCommunitiesAsAdmin() {
-        Set<UserRole> adminRoles = new HashSet<>();
+        List<UserRole> adminRoles = new ArrayList<>();
         adminRoles.add(UserRole.ADMIN);
 
-        Users adminUser = Users.createTestUser("admin", adminRoles);
+        User adminUser = User.createTestUser("admin", adminRoles);
         restTemplate = restTemplate.withBasicAuth(adminUser.getUserName(), "password");
 
         ResponseEntity<PagedResponse<Communities>> response = restTemplate.exchange(
@@ -99,10 +99,10 @@ public class CommunitiesAPITests {
 
     @Test
     public void testListAllCommunitiesAsRegularUser() {
-        Set<UserRole> regularUserRoles = new HashSet<>();
+        List<UserRole> regularUserRoles = new ArrayList<>();
         regularUserRoles.add(UserRole.USER);
 
-        Users regularUser = Users.createTestUser("user", regularUserRoles);
+        User regularUser = User.createTestUser("user", regularUserRoles);
         restTemplate = restTemplate.withBasicAuth(regularUser.getUserName(), "password");
 
         ResponseEntity<PagedResponse<Communities>> response = restTemplate.exchange(
@@ -202,16 +202,16 @@ public class CommunitiesAPITests {
         addCommunityMember(communityId, "User2");
         addCommunityMember(communityId, "User3");
 
-        ResponseEntity<PagedResponse<Users>> firstPageResponse = restTemplate.exchange(
+        ResponseEntity<PagedResponse<User>> firstPageResponse = restTemplate.exchange(
                 baseUrl + "/api/communities/" + communityId + "/members",
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<PagedResponse<Users>>() {},
+                new ParameterizedTypeReference<PagedResponse<User>>() {},
                 1, 10);
 
         assertEquals(HttpStatus.OK, firstPageResponse.getStatusCode());
 
-        PagedResponse<Users> firstPage = firstPageResponse.getBody();
+        PagedResponse<User> firstPage = firstPageResponse.getBody();
         assertNotNull(firstPage);
 
         assertTrue(firstPage.isFirst());
@@ -221,15 +221,15 @@ public class CommunitiesAPITests {
         assertEquals(3, firstPage.getTotalElements());
         assertEquals(3, firstPage.getContent().size());
 
-        ResponseEntity<PagedResponse<Users>> secondPageResponse = restTemplate.exchange(
+        ResponseEntity<PagedResponse<User>> secondPageResponse = restTemplate.exchange(
                 baseUrl + "/api/communities/" + communityId + "/members?page=2&size=2",
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<PagedResponse<Users>>() {});
+                new ParameterizedTypeReference<PagedResponse<User>>() {});
 
         assertEquals(HttpStatus.OK, secondPageResponse.getStatusCode());
 
-        PagedResponse<Users> secondPage = secondPageResponse.getBody();
+        PagedResponse<User> secondPage = secondPageResponse.getBody();
         assertNotNull(secondPage);
 
         assertFalse(secondPage.isFirst());
@@ -241,17 +241,17 @@ public class CommunitiesAPITests {
     }
 
     private void createTestUser(String username) {
-        Users newUser = new Users();
+        User newUser = new User();
         newUser.setUserName(username);
 
-        restTemplate.postForEntity(baseUrl + "/api/users", newUser, Users.class);
+        restTemplate.postForEntity(baseUrl + "/api/users", newUser, User.class);
     }
 
     private void addCommunityMember(UUID communityId, String username) {
         restTemplate.postForEntity(
                 baseUrl + "/api/communities/" + communityId + "/members/" + username,
                 null,
-                Users.class
+                User.class
         );
     }
 }

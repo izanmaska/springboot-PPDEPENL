@@ -2,40 +2,42 @@ package com.ethan.apiproject.service;
 
 import com.ethan.apiproject.model.Role;
 import com.ethan.apiproject.model.enums.Status;
-import com.ethan.apiproject.model.enums.UserRole;
-import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.User;
 import com.ethan.apiproject.repository.UsersRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UsersService {
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UsersRepository usersRepository;
 
-
-
-    public Users createUser(Users users){
-        return usersRepository.save(users);
+    public UsersService(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
     }
-    public Users createUserWithRoles(Users user, Set<Role> roles) {
+
+    public Boolean userExists(String userName){
+       return usersRepository.findByUserName(userName).isPresent();
+    }
+    public User createUser(User user){
+        return usersRepository.save(user);
+    }
+    public User createUserWithRoles(User user, List<Role> roles) {
         user.setRoles(roles);
         return usersRepository.save(user);
     }
-    public Page<Users> usersFindAll(Pageable pageable) {
+    public Page<User> usersFindAll(Pageable pageable) {
         return usersRepository.findAll(pageable);
-    }       public void deleteUser(UUID userId) {
-        Optional<Users> optionalUser = usersRepository.findById(userId);
+    }       public void deleteUser(String userId) {
+        Optional<User> optionalUser = usersRepository.findById(userId);
 
         if (optionalUser.isPresent()) {
-            Users user = optionalUser.get();
+            User user = optionalUser.get();
             user.setUserName(null);
            String[] emailParts = user.getEmail().split("@");
             if (emailParts.length > 1) {
@@ -49,9 +51,9 @@ public class UsersService {
         }
     }
 
-    public Optional<Users> userFindById(UUID id){
+    public Optional<User> userFindById(String id){
         return usersRepository.findById(id);
     }
-    public boolean userExistsById(UUID id){return usersRepository.existsById(id);}
+    public boolean userExistsById(String id){return usersRepository.existsById(id);}
 
 }

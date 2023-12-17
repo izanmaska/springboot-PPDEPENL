@@ -1,17 +1,13 @@
 package com.ethan.apiproject.IntegrationTests.APIIntegrationTests;
 import com.ethan.apiproject.model.Transactions;
 import com.ethan.apiproject.model.enums.Type;
-import com.ethan.apiproject.repository.TransactionsRepository;
-import com.ethan.apiproject.repository.UsersRepository;
-import com.ethan.apiproject.service.TransactionsService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TransactionsAPITests {
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private TransactionsService transactionsService;
-
-    @Autowired
-    private TransactionsRepository transactionsRepository;
-
-    @Autowired
-    private UsersRepository usersRepository;
-
     private String baseUrl;
     private RestTemplate restTemplate;
 
@@ -48,8 +34,8 @@ public class TransactionsAPITests {
     @Test
     public void testCreateTransaction() {
         Transactions newTransaction = new Transactions();
-        newTransaction.setUser1Id(UUID.randomUUID());
-        newTransaction.setUser2Id(UUID.randomUUID());
+        newTransaction.setUser1Id(UUID.randomUUID().toString());
+        newTransaction.setUser2Id(UUID.randomUUID().toString());
         newTransaction.setUser1Type(Type.B2C);
         newTransaction.setUser2Type(Type.B2C);
 
@@ -73,13 +59,12 @@ public class TransactionsAPITests {
         int page = 0;
         int size = 10;
 
-        PageRequest pageRequest = PageRequest.of(page, size);
 
         ResponseEntity<Page<Transactions>> response = restTemplate.exchange(
                 baseUrl + "/api/transactions?size=" + size + "&page=" + page,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<Page<Transactions>>() {}
+                new ParameterizedTypeReference<>() {}
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -90,8 +75,8 @@ public class TransactionsAPITests {
     @Test
     public void testFindTransactionById() {
         Transactions newTransaction = new Transactions();
-        newTransaction.setUser1Id(UUID.randomUUID());
-        newTransaction.setUser2Id(UUID.randomUUID());
+        newTransaction.setUser1Id(UUID.randomUUID().toString());
+        newTransaction.setUser2Id(UUID.randomUUID().toString());
         newTransaction.setUser1Type(Type.B2C);
         newTransaction.setUser2Type(Type.B2C);
 
@@ -121,8 +106,8 @@ public class TransactionsAPITests {
     @Test
     public void testDeleteTransaction() {
         com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
-        newTransaction.setUser1Id(UUID.randomUUID());
-        newTransaction.setUser2Id(UUID.randomUUID());
+        newTransaction.setUser1Id(UUID.randomUUID().toString());
+        newTransaction.setUser2Id(UUID.randomUUID().toString());
 
         ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
                 baseUrl + "/api/transactions",
@@ -147,8 +132,8 @@ public class TransactionsAPITests {
     @Test
     public void testTransactionHistory() {
         com.ethan.apiproject.model.Transactions newTransaction = new com.ethan.apiproject.model.Transactions();
-        newTransaction.setUser1Id(UUID.randomUUID());
-        newTransaction.setUser2Id(UUID.randomUUID());
+        newTransaction.setUser1Id(UUID.randomUUID().toString());
+        newTransaction.setUser2Id(UUID.randomUUID().toString());
 
         ResponseEntity<com.ethan.apiproject.model.Transactions> createResponse = restTemplate.postForEntity(
                 baseUrl + "/api/transactions",
@@ -158,7 +143,6 @@ public class TransactionsAPITests {
 
         com.ethan.apiproject.model.Transactions createdTransaction = createResponse.getBody();
         assert createdTransaction != null;
-        UUID transactionId = createdTransaction.getId();
 
         ResponseEntity<com.ethan.apiproject.model.Transactions[]> historyResponse = restTemplate.getForEntity(
                 baseUrl + "/api/users/1/transactions",
@@ -171,8 +155,8 @@ public class TransactionsAPITests {
     @Test
     public void testListTransactionsByUser() {
         Transactions newTransaction = new Transactions();
-        newTransaction.setUser1Id(UUID.randomUUID());
-        newTransaction.setUser2Id(UUID.randomUUID());
+        newTransaction.setUser1Id(UUID.randomUUID().toString());
+        newTransaction.setUser2Id(UUID.randomUUID().toString());
         newTransaction.setUser1Type(Type.B2C);
         newTransaction.setUser2Type(Type.B2C);
 
@@ -184,13 +168,12 @@ public class TransactionsAPITests {
 
         Transactions createdTransaction = createResponse.getBody();
         assertNotNull(createdTransaction);
-        UUID transactionId = createdTransaction.getId();
 
         ResponseEntity<Page<Transactions>> transactionsByUserResponse = restTemplate.exchange(
                 baseUrl + "/api/transactions/1/transactions?page=0&size=10",
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<Page<Transactions>>() {}
+                new ParameterizedTypeReference<>() {}
         );
 
         assertEquals(HttpStatus.OK, transactionsByUserResponse.getStatusCode());

@@ -1,9 +1,7 @@
 package com.ethan.apiproject.controller;
 
-import com.ethan.apiproject.model.Transactions;
-import com.ethan.apiproject.model.Users;
+import com.ethan.apiproject.model.User;
 import com.ethan.apiproject.service.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,39 +11,35 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
 
     private final UsersService usersService;
-
-    @Autowired
     public UsersController(UsersService usersService){
         this.usersService = usersService;
     }
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
-    private ResponseEntity<Page<Users>> listAllUsers(Pageable pageable) {
-        Page<Users> usersPage = usersService.usersFindAll(pageable);
+    private ResponseEntity<Page<User>> listAllUsers(Pageable pageable) {
+        Page<User> usersPage = usersService.usersFindAll(pageable);
         return ResponseEntity.ok(usersPage);
     }
 
 
     @GetMapping ("/{id}")
-    private ResponseEntity<Optional<Users>> findUserById (@PathVariable ("id") UUID id){
+    private ResponseEntity<Optional<User>> findUserById (@PathVariable ("id") String id){
         return ResponseEntity.ok(usersService.userFindById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
 
-    private ResponseEntity<Users> saveUser (@RequestBody Users users){
-        Users temp = usersService.createUser(users);
+    private ResponseEntity<User> saveUser (@RequestBody User user){
+        User temp = usersService.createUser(user);
         try {
             return ResponseEntity.created(new URI("api/users/"+temp.getId())).body(temp);
         }catch (Exception e){
@@ -54,16 +48,16 @@ public class UsersController {
     }
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void updateUser(@RequestBody Users users, @PathVariable UUID id){
+    public void updateUser(@RequestBody User user, @PathVariable String id){
         if(!usersService.userExistsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Content not found!");
         }
-        usersService.createUser(users);
+        usersService.createUser(user);
     }
 
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteUser(@PathVariable UUID userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable String userId) {
         usersService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }

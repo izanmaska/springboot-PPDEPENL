@@ -1,9 +1,7 @@
 package com.ethan.apiproject.controller;
 
 import com.ethan.apiproject.model.Transactions;
-import com.ethan.apiproject.model.Users;
 import com.ethan.apiproject.service.TransactionsService;
-import com.ethan.apiproject.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,8 +21,7 @@ import java.util.UUID;
 public class TransactionsController {
 
     private final TransactionsService transactionsService;
-    @Autowired
-    private TransactionsController(TransactionsService transactionsService){
+    public TransactionsController(TransactionsService transactionsService){
         this.transactionsService = transactionsService;
     }
 
